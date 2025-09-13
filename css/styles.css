@@ -1,0 +1,255 @@
+:root {
+  --site-background-color:#87ceeb;
+  --font-weight-headlines: 700;
+  --link-color:#321900;
+  --link-visited-color:#5c5c52;
+  --link-active-color:#8a2be2;
+  --button-background-color:#dd8417;
+  --button-color: #000;
+  --button-border-buttom-color:#0000004d;
+  --button-active-background-color:#50ff6d;
+  --navigation-link-visited-color:#000;
+  --grid-background-color: #d2691e;
+  --grid-border-color: #000;
+  --first-limit-display: 500px;
+  --second-limit-display:750px;
+}
+
+body {
+    background-color: var(--site-background-color); /*skyblue*/
+    font-family: 'GFS Neohellenic', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px;  
+    line-height: 1.2;
+}
+* {
+  box-sizing: border-box;
+}
+h1 {
+  font-size: 45px;
+  font-weight: var(--font-weight-headlines);
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: var(--font-weight-headlines);
+}
+
+h3 {
+  font-size: 27px;
+  font-weight: var(--font-weight-headlines);
+}
+
+.adress {
+  line-height: 0;
+}
+
+/* used in the contact form */
+label{
+  display: block;
+}
+a {
+    color: var(--link-color);
+    /*transition mostly to play around with it, should be deleted later on!*/
+    transition: all 0.2s ease-in-out 1s;
+}
+a:hover, a:focus {
+    /* No underlining when hovering or focusing a link*/
+    text-decoration:none;
+}
+a:visited {
+    /* color of an already visited link*/
+    color:var(--link-visited-color);
+}
+a:active {
+    /* Color of a currently selected link*/
+    color:var(--link-active-color)
+}
+
+/* Button and Fake-Button Style */
+button, .button {
+  /* overwrites browser defaults and resets the border */
+  border: none;
+  /* takes the font from the outer container */
+  font-family: inherit;
+  /* styles the background color, font color, and text decoration (underline, etc.) of the button */
+  background-color: var(--button-background-color);
+  color: var(--button-color);
+  text-decoration: none;
+  /*adds spacing to the button */
+  padding: 10px;
+  border-radius: 3px;
+  /* gives the button a bottom border with a width of 2px, a type of solid, and a color in RGBA format */
+  border-bottom: 2px solid var(--button-border-buttom-color);
+  /* gives the Button a transition with changing color*/
+  transition: opacity, background-color, 0.5s;
+}
+
+button:hover, button:focus,
+.button:hover, .button:focus {
+  /* lets the mouse appear as a hand when hovering over the button */
+  cursor: pointer;
+  /* reduces the opacity of the button to 75% */
+  opacity: 0.75;
+  background-color: var(--button-active-background-color);
+}
+
+/*the same style for the different pages*/
+.profile, .about, .contact, .projects{
+  max-width:700px;
+  margin: 0 auto;
+}
+
+.profile_portrait{
+  float:left;
+  width:200px;
+  margin-right: 40px;
+  border-radius:50%;
+}
+
+.page-footer{
+  clear:both;
+  display: flex;
+  flex-direction: column;
+  text-align:center
+}
+
+.page-header{
+  display:flex;
+  width:100%;
+  padding:20px;  
+}
+
+.main-navigation{
+  flex: 0 1 200px;
+}
+
+.main-navigation:last-child{
+  flex-grow:1;
+  text-align: right;
+}
+
+.navigation-list{
+  list-style-type: none;
+}
+
+.navigation-list li{
+  display:inline-block;
+  margin-left: 15px;
+}
+
+.navigation-list__current{
+  text-decoration:none;
+}
+
+.navigation-list__current:visited{
+    color: var(--navigation-link-visited-color);
+}
+/* start grid fallback */
+.grid__item {
+ display: inline-block;
+ width: 33%;
+}
+/* end grid fallback */
+@supports(display:grid){
+  .grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 20px;
+    padding: 20px;
+    margin: 2px;
+    text-align: center;  
+  }
+}
+.grid__item{
+  background-color: var(--grid-background-color);
+  width:auto;
+  min-height: auto;
+  margin: 2px;
+  border-color: var(--grid-border-color);
+  border-width: 200px;
+}
+
+@media all and (max-width: var(--first-limit-display )) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media all and (min-width: 500px) and (max-width: 750px){
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media all and (max-width: 750px) {
+  .grid {
+    grid-gap: 10px;
+  }
+  .grid__item:last-child {
+    grid-column: auto / auto;
+    grid-row: auto / auto;
+  }
+  h1 {
+    font-size: 22px;
+  }
+}
+
+@keyframes own-color-change{
+  /*Cycling the colors from black to dark blue, to dark yellow to red, all colors of the emblem of Leipzig*/
+  0% {
+    fill:#000
+  }
+  33% {
+    fill:#0a18db
+  }
+  66% {
+    fill:#f0cd07
+  }
+  100% {
+    fill:#ff0000
+  }
+}
+
+@keyframes rotate-logo{
+  from{
+    rotate: 0deg;
+  }
+  to{
+    rotate: 120deg;
+  }
+}
+.logo{
+  animation: rotate-logo 30s infinite linear;
+}
+.skyline{
+  animation: 10s own-color-change infinite alternate linear;
+}
+
+@keyframes color-change {
+  from {
+    transform: translate(0, 0);
+  }
+  to{
+    transform: translate(100px, 100px);
+    scale: 80%;
+  }
+  0% {
+    fill: #fcffad;
+  }
+  50% {
+    fill: #edc655;
+  }
+  100% {
+    fill: #f76414;
+  }
+}
+
+.sun {
+  animation-duration: 4s;
+  animation-name: color-change;
+  animation-iteration-count: infinite;
+  animation-direction: reverse;
+  animation-timing-function: linear;
+}
