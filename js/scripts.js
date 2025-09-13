@@ -1,7 +1,8 @@
 //getting the langauge the user speaks from the browser.
 let userLang = navigator.language;
 //very basic language based differentiation. 
-if(userLang == "de-DE"){
+// "de", "de-AT", "de-BE", "de-CH", "de-DE", "de-IT", "de-LI", "de-LU" are the possible returns for german speakers. 
+if(userLang == "de-DE" || "de" || "de-AT" || "de-Be" || "de-CH" || "de-IT" || "de-LI" || "de-LU"){
     userLang = "german";
 } else {
     userLang = "english";
