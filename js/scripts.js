@@ -29,4 +29,25 @@ let bisaflor = {
     types: ["grass", "poison"],
 };
 pokemonList = [bisasam, bisaknosp, bisaflor];
-document.getElementById("output").textContent= `${userLang}`;
+let listOutput = "";
+//iterating over all Pokemons in the array and then displaying them on the website in the users language, together with mentioning which one has the highest height.
+for(let i=0; i<pokemonList.length; i++){
+    if(userLang === "german"){
+        listOutput = listOutput + pokemonList[i].nameGer;
+        //deprecated function, using it because the task wants it
+        document.write(pokemonList[i].nameGer);
+        if(pokemonList[i].height > 1.8){
+            listOutput += ` dieses Pokemon ist größer als die meisten Menschen, mit ${pokemonList[i].height} Metern!`;
+        }   
+    } else {
+        listOutput = listOutput + pokemonList[i].nameEng;
+        //deprecated function, using it because the task wants it
+        document.write(pokemonList[i].nameEng);
+        if(pokemonList[i].height > 1.8){
+            listOutput += ` this Pokemon is bigger then most humans, at ${pokemonList[i].height} meters!`;
+        }   
+    }
+    listOutput +="<br>";
+}
+//this is potentially unsafe, as it isn't a safeHTML object
+document.getElementById("output").innerHTML= `${listOutput}`;
