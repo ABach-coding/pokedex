@@ -1,15 +1,32 @@
-alert("Hello World");
 //getting the langauge the user speaks from the browser.
 let userLang = navigator.language;
 //very basic language based differentiation. 
 if(userLang == "de-DE"){
-    favouriteFood = "germany";
-} else if (userLang == "en"){
-    favouriteFood = "british";
+    userLang = "german";
 } else {
-    favouriteFood = "american";
+    userLang = "english";
 }
-//document.write is deprecated and shouldn't be used. Only using it because the task explicitly mentions it!
-document.write('Your favourite food is probably something from '+ favouriteFood + '! Or do you prefer something more exotic?');
-//adding an alternative and not deprecated way to get the required task done. Still not using trustedHTML-Objects.
-document.getElementById("output").textContent='Your favourite food is probably something from '+ favouriteFood + '! Or do you prefer something more exotic?';
+let pokemonList = [];
+let bisasam = {
+    nameEng: "Bulbasaur",
+    nameGer: "Bisasam",
+    height: 0.7,
+    weight: 6.9,
+    types: ["grass", "poison"],
+};
+let bisaknosp = {
+    nameEng: "Ivysaur",
+    nameGer: "Bisaknosp",
+    height: 1.0,
+    weight: 13.0,
+    types: ["grass", "poison"],
+};
+let bisaflor = {
+    nameEng: "Venusaur",
+    nameGer: "Bisaflor",
+    height: 2.0,
+    weight: 100.0,
+    types: ["grass", "poison"],
+};
+pokemonList = [bisasam, bisaknosp, bisaflor];
+document.getElementById("output").textContent= `${userLang}`;
