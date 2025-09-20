@@ -51,7 +51,13 @@ let pokemonNames = (function(){
         pokemonList : finalPokemonList
     }
 })();
-
+/*
+*************************************************************************************************
+***
+*** It works and does create a file successfully to download. Sadly because of not using node.js, 
+*** I can't actually use the resulting file going further. So this part is currently on ice.
+***
+*************************************************************************************************
 //timeout to make sure the data had time to be fetched and written into pokemonList, before the file is actually made, otherwise it ends as an empty list!
 setTimeout(writeFile, 2000, pokemonNames.pokemonList);
 
@@ -65,5 +71,5 @@ function writeFile(data){
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-}
+}*/
 
