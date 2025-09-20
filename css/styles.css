@@ -6,13 +6,14 @@
   --link-active-color:#8a2be2;
   --button-background-color:#dd8417;
   --button-color: #000;
-  --button-border-buttom-color:#0000004d;
+  --button-border-buttom-color:#000;
   --button-active-background-color:#50ff6d;
   --navigation-link-visited-color:#000;
   --grid-background-color: #d2691e;
   --grid-border-color: #000;
   --first-limit-display: 500px;
   --second-limit-display:750px;
+  --search-text-color:#d3d3d3;
 }
 
 body {
@@ -41,34 +42,13 @@ h3 {
   font-weight: var(--font-weight-headlines);
 }
 
-.adress {
-  line-height: 0;
-}
-
 /* used in the contact form */
 label{
   display: block;
 }
-a {
-    color: var(--link-color);
-    /*transition mostly to play around with it, should be deleted later on!*/
-    transition: all 0.2s ease-in-out 1s;
-}
-a:hover, a:focus {
-    /* No underlining when hovering or focusing a link*/
-    text-decoration:none;
-}
-a:visited {
-    /* color of an already visited link*/
-    color:var(--link-visited-color);
-}
-a:active {
-    /* Color of a currently selected link*/
-    color:var(--link-active-color)
-}
 
-/* Button and Fake-Button Style */
-button, .button {
+/* Button Style for the pokemon names */
+.pokemon-name{
   /* overwrites browser defaults and resets the border */
   border: none;
   /* takes the font from the outer container */
@@ -79,11 +59,33 @@ button, .button {
   text-decoration: none;
   /*adds spacing to the button */
   padding: 10px;
-  border-radius: 3px;
+  margin: 2px;
+  /*round Button corners*/
+  border-radius: 10px;
+  /*width defined as ratio of the device*/
+  width: 60%;
   /* gives the button a bottom border with a width of 2px, a type of solid, and a color in RGBA format */
   border-bottom: 2px solid var(--button-border-buttom-color);
   /* gives the Button a transition with changing color*/
   transition: opacity, background-color, 0.5s;
+}
+
+.pokemon-list{
+  list-style-type: none;
+  text-align:center;
+}
+
+.search{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-field{
+  text-align: left;
+  width: 80%;
+  margin:5px;
+  color:var(--search-text-color);
 }
 
 button:hover, button:focus,
@@ -93,19 +95,6 @@ button:hover, button:focus,
   /* reduces the opacity of the button to 75% */
   opacity: 0.75;
   background-color: var(--button-active-background-color);
-}
-
-/*the same style for the different pages*/
-.profile, .about, .contact, .projects{
-  max-width:700px;
-  margin: 0 auto;
-}
-
-.profile_portrait{
-  float:left;
-  width:200px;
-  margin-right: 40px;
-  border-radius:50%;
 }
 
 .page-footer{
@@ -196,60 +185,15 @@ button:hover, button:focus,
   }
 }
 
-@keyframes own-color-change{
-  /*Cycling the colors from black to dark blue, to dark yellow to red, all colors of the emblem of Leipzig*/
-  0% {
-    fill:#000
-  }
-  33% {
-    fill:#0a18db
-  }
-  66% {
-    fill:#f0cd07
-  }
-  100% {
-    fill:#ff0000
-  }
-}
-
 @keyframes rotate-logo{
   from{
     rotate: 0deg;
   }
   to{
-    rotate: 120deg;
+    rotate: 360deg;
   }
 }
 .logo{
   animation: rotate-logo 30s infinite linear;
 }
-.skyline{
-  animation: 10s own-color-change infinite alternate linear;
-}
 
-@keyframes color-change {
-  from {
-    transform: translate(0, 0);
-  }
-  to{
-    transform: translate(100px, 100px);
-    scale: 80%;
-  }
-  0% {
-    fill: #fcffad;
-  }
-  50% {
-    fill: #edc655;
-  }
-  100% {
-    fill: #f76414;
-  }
-}
-
-.sun {
-  animation-duration: 4s;
-  animation-name: color-change;
-  animation-iteration-count: infinite;
-  animation-direction: reverse;
-  animation-timing-function: linear;
-}

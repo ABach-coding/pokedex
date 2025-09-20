@@ -48,13 +48,40 @@ let pokemonRepository = (function() {
             return pokemon.nameEng == name || pokemon.nameGer == name;
         });
     }
+    // a function to get the desired text for each entry in the Pokedex.
+    function addPokemonToDOMList(pokemon){
+        let mainList = document.querySelector(".pokemon-list"); 
+        let listItem = document.createElement("li");
+        let button = document.createElement("button");
+        if(userPreferences.getLanguage === "german"){
+            button.innerText = pokemon.nameGer;   
+        } else {
+            button.innerText = pokemon.nameEng;   
+        }
+        button.classList.add("pokemon-name");
+        addPokemonListener(button, pokemon);
+        listItem.appendChild(button);
+        mainList.appendChild(listItem);
+    }
     
+    function showDetails(pokemon){
+        console.log(pokemon);
+    }
+
+    function addPokemonListener(button, pokemon){
+        button.addEventListener("click", function(){
+            showDetails(pokemon);
+        });
+    }
+
     return {
         getAll: pokemonList,
 
         add: add,
 
-        search: search
+        search: search,
+
+        addPokemonToDOMList: addPokemonToDOMList
     }
 
     
@@ -97,31 +124,42 @@ pokemonRepository.add(bisafail);
 
 pokemonList = pokemonRepository.getAll;
 
-//the output string we will use
-let listOutput = "";
-
 //check of the search functionality.
 console.log(pokemonRepository.search("Ivysaur"));
 console.log(pokemonRepository.search("Garados"));
 
-//iterating over all Pokemons in the array for displaying them on the website in the users language, together with mentioning which one has the highest height.
-//saves the output in the "listOutput" variable
-pokemonList.forEach(getPokemonString);
-document.getElementById("output").innerHTML= `${listOutput}`;
+//iterating over all Pokemons in the array for displaying them on the website in the users language.
+//Directly manipulates the websites DOM!
+pokemonList.forEach(pokemonRepository.addPokemonToDOMList);
 
-// a function to get the desired text for each entry in the Pokedex.
-function getPokemonString(pokemon){
-    if(userPreferences.getLanguage === "german"){
-        listOutput += pokemon.nameGer;
-        if(pokemon.height > 1.8){
-            listOutput += ` dieses Pokemon ist größer als die meisten Menschen, mit ${pokemon.height} Metern!`;
-        }   
-    } else {
-        listOutput += pokemon.nameEng;
-        if(pokemon.height > 1.8){
-            listOutput += ` this Pokemon is bigger then most humans, at ${pokemon.height} meters!`;
-        }   
+let searchField = document.querySelector(".search-field");
+
+//Add the correct text to the search field.
+let setSearchFieldText = function(){
+    function setBaseText(){
+        if(userPreferences.getLanguage === "german") searchField.value = "Suche nach Pokemon";
+        else searchField.value = "Search for a pokemon";
     }
-    listOutput +="<br>";
-}
+    setBaseText();
+    return {
+        setBaseText: setBaseText
+    }
+}();
+
+//clear the search Field of text when clicking into it
+searchField.addEventListener("click", function(){
+    searchField.value = "";
+})
+
+//add the correct text when no longer using the Basetext, if no search happened.
+searchField.addEventListener("focusout", function(){
+    if(searchField.value != "") 
+        ;//keeps the text in the searchbar
+    else
+        setSearchFieldText.setBaseText();
+})
+
+
+
+
 
