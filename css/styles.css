@@ -75,6 +75,16 @@ label{
   text-align:center;
 }
 
+button:hover, button:focus,
+.button:hover, .button:focus {
+  /* lets the mouse appear as a hand when hovering over the button */
+  cursor: pointer;
+  /* reduces the opacity of the button to 75% */
+  opacity: 0.75;
+  background-color: var(--button-active-background-color);
+}
+
+/*Search functionality*/
 .search{
   display: flex ;
   align-items: center;
@@ -85,6 +95,7 @@ label{
 .help-text{
   font-size: 12px;
 }
+
 .search-field{
   text-align: left;
   width: 80%;
@@ -92,14 +103,54 @@ label{
   color:var(--search-text-color);
 }
 
-button:hover, button:focus,
-.button:hover, .button:focus {
-  /* lets the mouse appear as a hand when hovering over the button */
-  cursor: pointer;
-  /* reduces the opacity of the button to 75% */
-  opacity: 0.75;
-  background-color: var(--button-active-background-color);
+.search-field:focus{
+  color: #000;
 }
+
+/*Modal*/
+#modal-container{
+  display: none;
+}
+
+#modal-container.is-visible{
+  position: fixed;
+  padding: 20px;
+  box-sizing: border-box;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+
+  /* to show it above everything else*/
+  z-index: 999;
+
+  /*to still allow scrolling*/
+  overflow:auto;
+  display: grid;
+  text-align: center;
+}
+
+.modal {
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  box-sizing: border-box;
+  background: #d0eef0;
+  padding: 15px;
+  width: 100%;
+  max-width: 700px;
+  text-align: left;
+}
+
+#modal-close {
+  float: right;
+  border: 0;
+  background: none;
+  color: #777;
+  text-decoration: underline;
+}
+
 
 .page-footer{
   clear:both;

@@ -13,6 +13,7 @@ let userPreferences = (function() {
         getLanguage: userLang
     };
 })();
+
 let pokemonRepository = (function() {
     pokemonList = [];
     
@@ -41,13 +42,15 @@ let pokemonRepository = (function() {
         if("de" === userPreferences.getLanguage){
             pokemonNames.de.forEach(function(pokemon){
                 add({"name": pokemon.name,
-                    "detailsURL": "https://pokeapi.co/api/v2/pokemon/" + pokemon.id
+                    "detailsURL": "https://pokeapi.co/api/v2/pokemon/" + pokemon.id,
+                    "furtherDetailsURL":"https://pokeapi.co/api/v2/pokemon-species/" + pokemon.id
                 });
             });
         } else {
            pokemonNames.en.forEach(function(pokemon){
                 add({"name": pokemon.name,
-                    "detailsURL": "https://pokeapi.co/api/v2/pokemon/" + pokemon.id
+                    "detailsURL": "https://pokeapi.co/api/v2/pokemon/" + pokemon.id,
+                    "furtherDetailsURL":"https://pokeapi.co/api/v2/pokemon-species/" + pokemon.id
                 });
             });
         }
@@ -75,7 +78,16 @@ let pokemonRepository = (function() {
         mainList.appendChild(listItem);
     }
     
-    function getDetails(pokemon){
+    //returns the first Object in the searchArray, which has the language property
+    function findLanguageEntry(searchArray, language){
+        for(let i=0; i<searchArray.length; i++){
+            if (searchArray[i].language.name === language)
+                return searchArray[i];
+        }
+    }
+    
+    function showDetails(pokemon){
+        Promise.allSettled([
         fetch(pokemon.detailsURL).then(function(response){
             return response.json();
         }).then(function(details){
@@ -83,12 +95,18 @@ let pokemonRepository = (function() {
             pokemon.weight = details.weight;
             pokemon.imgURL = details.sprites.front_default;
             pokemon.cry = details.cries.legacy;
-        })
-    }
-
-    function showDetails(pokemon){
-        getDetails(pokemon);
-        console.log(pokemon);
+        }),
+        fetch(pokemon.furtherDetailsURL).then(function(response){
+            return response.json();
+        }).then(function(details){
+            pokemon.genus = findLanguageEntry(details.genera, userPreferences.getLanguage).genus;
+            pokemon.flavorText = findLanguageEntry(details.flavor_text_entries, userPreferences.getLanguage).flavor_text;
+        })]).then(function(){
+            modal.showModal(pokemon);
+        }).catch(function (e){
+            // if something went wrong
+            console.log(console.error(e));
+        });
     }
 
     function addPokemonListener(button, pokemon){
@@ -107,7 +125,7 @@ let pokemonRepository = (function() {
     return {
         loadList: loadList,
 
-        getDetails: getDetails, 
+        showDetails: showDetails, 
 
         getAll: pokemonList,
 
@@ -154,8 +172,11 @@ let search = function(){
     searchField.addEventListener("focusout", function(){
         if(searchField.value != "") 
             ;//keeps the text in the searchbar
-        else
+        else{
             setSearchFieldText.setBaseText();
+            // if the searchBar gets reset, show the entire Pokemonlist again.
+            pokemonList.forEach(pokemonRepository.addPokemonToDOMList);
+        }
     })
 
     //searches the PokemonList for the Pokemons that hit the required searchValue
@@ -196,5 +217,69 @@ let search = function(){
 
 }()
 
+let modal = function(){
+    
+    function showModal(pokemon){
+        let modalContainer = document.querySelector("#modal-container");
+        //clear anything that was added to the modal beforehand.
+        modalContainer.innerHTML = "";
+        modalContainer.classList.add("is-visible");
+        let modals = document.createElement("div");
+        modals.classList.add("modal");
+        modalContainer.appendChild(modals);
+        //plays the sound of the Pokemon when opening more Info about it
+        let cry = new Audio(pokemon.cry);
+        cry.play();
+        let picture = document.createElement("img");
+        picture.src = pokemon.imgURL;
+        let textinfo = document.createElement("p");
+        if (userPreferences.getLanguage == "de"){
+            textinfo.innerHTML= "Höhe: " + pokemon.height + "<br>"
+                + "Gewicht: " + pokemon.weight + "<br>"
+                + pokemon.genus;
+        } else {
+            textinfo.innerHTML= "Height: " + pokemon.height + "<br>"
+                + "Weight: " + pokemon.weight + "<br>"
+                + pokemon.genus;
+        }
+        let pokeInfo = document.createElement("p");
+        pokeInfo.innerText = pokemon.flavorText;
+        modals.appendChild(picture);
+        modals.appendChild(textinfo);
+        modals.appendChild(pokeInfo);
+        
+        /* Makes a Close Button on the Modal*/ 
+        let closeButton = document.createElement("button");
+        closeButton.id="modal-close";
+        (userPreferences.getLanguage == "de")? closeButton.innerText = "Schließen" : closeButton.innerText = "Close"; 
+        closeButton.addEventListener('click', hideModal);
+        modals.appendChild(closeButton);
+        
+        // closes the modal, if you click on the border
+        modalContainer.addEventListener("click", (e)=> {
+            let target = e.target;
+            if (target === modalContainer) {
+                hideModal();
+            }
+        });
+    }
 
+    function hideModal(){
+        let modalContainer = document.querySelector("#modal-container");
+        modalContainer.classList.remove("is-visible");
+    }
 
+    /* Allows closing of the Modal with the escape key*/
+    window.addEventListener("keydown", (e) =>{
+        let modalContainer = document.querySelector("#modal-container");
+        if (e.key === "Escape" && modalContainer.classList.contains("is-visible")) {
+            hideModal();
+        }
+    });
+
+    return {
+        showModal: showModal,
+
+        hideModal: hideModal
+    }
+}()
