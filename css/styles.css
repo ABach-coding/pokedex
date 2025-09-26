@@ -76,11 +76,15 @@ label{
 }
 
 .search{
-  display: flex;
+  display: flex ;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 
+.help-text{
+  font-size: 12px;
+}
 .search-field{
   text-align: left;
   width: 80%;

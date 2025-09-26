@@ -60,7 +60,7 @@ let pokemonRepository = (function() {
 
     function search(name){
         return pokemonList.filter(function(pokemon){
-            return pokemon.name == name;
+            return pokemon.name.includes(name); //we can search for parts of the name!
         });
     }
     // a function to get the desired text for each entry in the Pokedex.
@@ -97,6 +97,13 @@ let pokemonRepository = (function() {
         });
     }
 
+    function resetDOMList(){
+        let mainlist = document.querySelector(".pokemon-list");
+        while(mainlist.hasChildNodes()){
+            mainlist.removeChild(mainlist.firstChild);
+        }
+    }
+
     return {
         loadList: loadList,
 
@@ -108,7 +115,9 @@ let pokemonRepository = (function() {
 
         search: search,
 
-        addPokemonToDOMList: addPokemonToDOMList
+        addPokemonToDOMList: addPokemonToDOMList,
+
+        resetDOMList: resetDOMList
     }
 
     
@@ -121,34 +130,71 @@ pokemonList = pokemonRepository.getAll;
 //Directly manipulates the websites DOM!
 pokemonList.forEach(pokemonRepository.addPokemonToDOMList);
 
-let searchField = document.querySelector(".search-field");
+let search = function(){
+    let searchField = document.querySelector(".search-field");
 
-//Add the correct text to the search field.
-let setSearchFieldText = function(){
-    function setBaseText(){
-        if(userPreferences.getLanguage === "german") searchField.value = "Suche nach Pokemon";
-        else searchField.value = "Search for a pokemon";
+    //Add the correct text to the search field.
+    let setSearchFieldText = function(){
+        function setBaseText(){
+            if(userPreferences.getLanguage === "german") searchField.value = "Suche nach Pokemon";
+            else searchField.value = "Search for a pokemon";
+        }
+        setBaseText();
+        return {
+            setBaseText: setBaseText
+        }
+    }();
+
+    //clear the search Field of text when clicking into it
+    searchField.addEventListener("click", function(){
+        searchField.value = "";
+    })
+
+    //add the correct text when no longer using the Basetext, if no search happened.
+    searchField.addEventListener("focusout", function(){
+        if(searchField.value != "") 
+            ;//keeps the text in the searchbar
+        else
+            setSearchFieldText.setBaseText();
+    })
+
+    //searches the PokemonList for the Pokemons that hit the required searchValue
+    //changes the List to only display the Pokemons valied with the search
+    searchField.addEventListener("input", function(){
+        let resultList = pokemonRepository.search(searchField.value);
+        pokemonRepository.resetDOMList();
+        resultList.forEach(pokemonRepository.addPokemonToDOMList);
+        if(resultList.length == 0){
+            if(userPreferences.getLanguage == "de") {
+                setHelpText(searchField, "Die Suche beachtet Groß- und Kleinschreibung. Überprüfe auch, ob keine Rechtschreibfehler vorhanden sind!")
+            } else {
+                setHelpText(searchField, "The search is case-sensitive. Also check for spelling mistakes!");
+            }
+        } else {
+            setHelpText(searchField, "");
+        }
+    })
+
+    //add helpful text, if the search returns empty
+    function setHelpText(input, message){
+        let container = input.parentElement;
+
+        //check and remove old help message
+        let oldText = container.querySelector('.help-text');
+        if(oldText) {
+            container.removeChild(oldText);
+        }
+
+        //add the help message, if it isn't empty.
+        if(message){
+            let newHelpText = document.createElement("div");
+            newHelpText.classList.add("help-text");
+            newHelpText.innerText = message;
+            container.appendChild(newHelpText);
+        }
     }
-    setBaseText();
-    return {
-        setBaseText: setBaseText
-    }
-}();
 
-//clear the search Field of text when clicking into it
-searchField.addEventListener("click", function(){
-    searchField.value = "";
-})
-
-//add the correct text when no longer using the Basetext, if no search happened.
-searchField.addEventListener("focusout", function(){
-    if(searchField.value != "") 
-        ;//keeps the text in the searchbar
-    else
-        setSearchFieldText.setBaseText();
-})
-
-
+}()
 
 
 
