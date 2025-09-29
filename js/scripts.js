@@ -63,7 +63,7 @@ let pokemonRepository = (function() {
 
     function search(name){
         return pokemonList.filter(function(pokemon){
-            return pokemon.name.includes(name); //we can search for parts of the name!
+            return pokemon.name.toLowerCase().includes(name.toLowerCase()); //we can search for parts of the name!
         });
     }
     // a function to get the desired text for each entry in the Pokedex.
@@ -187,9 +187,9 @@ let search = function(){
         resultList.forEach(pokemonRepository.addPokemonToDOMList);
         if(resultList.length == 0){
             if(userPreferences.getLanguage == "de") {
-                setHelpText(searchField, "Die Suche beachtet Groß- und Kleinschreibung. Überprüfe auch, ob keine Rechtschreibfehler vorhanden sind!")
+                setHelpText(searchField, "Überprüfe, ob keine Rechtschreibfehler vorhanden sind!")
             } else {
-                setHelpText(searchField, "The search is case-sensitive. Also check for spelling mistakes!");
+                setHelpText(searchField, "Please check for spelling mistakes!");
             }
         } else {
             setHelpText(searchField, "");
