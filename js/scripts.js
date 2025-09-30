@@ -187,7 +187,7 @@ let search = function(){
         resultList.forEach(pokemonRepository.addPokemonToDOMList);
         if(resultList.length == 0){
             if(userPreferences.getLanguage == "de") {
-                setHelpText(searchField, "Überprüfe, ob keine Rechtschreibfehler vorhanden sind!")
+                setHelpText(searchField, "Überprüfe, ob Rechtschreibfehler vorhanden sind!")
             } else {
                 setHelpText(searchField, "Please check for spelling mistakes!");
             }
@@ -220,40 +220,28 @@ let search = function(){
 let modal = function(){
     
     function showModal(pokemon){
-        let modalContainer = document.querySelector("#modal-container");
-        //clear anything that was added to the modal beforehand.
-        modalContainer.innerHTML = "";
+        let modalContainer= document.querySelector("#modal-container");
         modalContainer.classList.add("is-visible");
-        let modals = document.createElement("div");
-        modals.classList.add("modal");
-        modalContainer.appendChild(modals);
         //plays the sound of the Pokemon when opening more Info about it
         let cry = new Audio(pokemon.cry);
         cry.play();
-        let picture = document.createElement("img");
-        picture.src = pokemon.imgURL;
-        let textinfo = document.createElement("p");
+        document.querySelector(".name").innerText = pokemon.name;
+        document.querySelector(".poke-picture").src = pokemon.imgURL;
         if (userPreferences.getLanguage == "de"){
-            textinfo.innerHTML= "Höhe: " + pokemon.height + "<br>"
+            document.querySelector(".poke-details").innerHTML= "Höhe: " + pokemon.height + "<br>"
                 + "Gewicht: " + pokemon.weight + "<br>"
                 + pokemon.genus;
         } else {
-            textinfo.innerHTML= "Height: " + pokemon.height + "<br>"
+            document.querySelector(".poke-details").innerHTML= "Height: " + pokemon.height + "<br>"
                 + "Weight: " + pokemon.weight + "<br>"
                 + pokemon.genus;
         }
-        let pokeInfo = document.createElement("p");
-        pokeInfo.innerText = pokemon.flavorText;
-        modals.appendChild(picture);
-        modals.appendChild(textinfo);
-        modals.appendChild(pokeInfo);
+        document.querySelector(".flavor-text").innerText = pokemon.flavorText;
         
-        /* Makes a Close Button on the Modal*/ 
-        let closeButton = document.createElement("button");
-        closeButton.id="modal-close";
+        /* Sets a Close Button on the Modal*/ 
+        let closeButton = document.querySelector("#modal-close");
         (userPreferences.getLanguage == "de")? closeButton.innerText = "Schließen" : closeButton.innerText = "Close"; 
         closeButton.addEventListener('click', hideModal);
-        modals.appendChild(closeButton);
         
         // closes the modal, if you click on the border
         modalContainer.addEventListener("click", (e)=> {
@@ -265,14 +253,12 @@ let modal = function(){
     }
 
     function hideModal(){
-        let modalContainer = document.querySelector("#modal-container");
-        modalContainer.classList.remove("is-visible");
+        document.querySelector("#modal-container").classList.remove("is-visible");
     }
 
     /* Allows closing of the Modal with the escape key*/
     window.addEventListener("keydown", (e) =>{
-        let modalContainer = document.querySelector("#modal-container");
-        if (e.key === "Escape" && modalContainer.classList.contains("is-visible")) {
+        if (e.key === "Escape" && document.querySelector("#modal-container").classList.contains("is-visible")) {
             hideModal();
         }
     });
