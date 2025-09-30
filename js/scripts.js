@@ -68,11 +68,17 @@ let pokemonRepository = (function() {
     }
     // a function to get the desired text for each entry in the Pokedex.
     function addPokemonToDOMList(pokemon){
-        let mainList = document.querySelector(".pokemon-list"); 
+        let mainList = document.querySelector("#pokemon-list"); 
         let listItem = document.createElement("li");
+        listItem.classList.add("list-group-item");
+        listItem.classList.add("list-group-item-info");
+        listItem.id="pokemon-list";
         let button = document.createElement("button");
         button.innerText = pokemon.name;   
         button.classList.add("pokemon-name");
+        button.classList.add("btn");
+        button.setAttribute("data-toggle", "modal");
+        button.setAttribute("data-target", "#pokemon-Detail-Modal");
         addPokemonListener(button, pokemon);
         listItem.appendChild(button);
         mainList.appendChild(listItem);
@@ -116,7 +122,7 @@ let pokemonRepository = (function() {
     }
 
     function resetDOMList(){
-        let mainlist = document.querySelector(".pokemon-list");
+        let mainlist = document.querySelector("#pokemon-list");
         while(mainlist.hasChildNodes()){
             mainlist.removeChild(mainlist.firstChild);
         }
@@ -220,19 +226,19 @@ let search = function(){
 let modal = function(){
     
     function showModal(pokemon){
-        let modalContainer = document.querySelector("#modal-container");
-        //clear anything that was added to the modal beforehand.
-        modalContainer.innerHTML = "";
-        modalContainer.classList.add("is-visible");
-        let modals = document.createElement("div");
-        modals.classList.add("modal");
-        modalContainer.appendChild(modals);
         //plays the sound of the Pokemon when opening more Info about it
         let cry = new Audio(pokemon.cry);
         cry.play();
+        document.querySelector("#Pokemon-Name").innerText=pokemon.name;
         let picture = document.createElement("img");
+        picture.classList.add("col-6");
         picture.src = pokemon.imgURL;
-        let textinfo = document.createElement("p");
+        let firstRow = document.querySelector(".poke-Details");
+        firstRow.innerHTML="";
+        let secondRow = document.querySelector(".poke-Flavor");
+        secondRow.innerHTML="";
+        textinfo = document.createElement("p");
+        textinfo.classList.add("col-6");
         if (userPreferences.getLanguage == "de"){
             textinfo.innerHTML= "Höhe: " + pokemon.height + "<br>"
                 + "Gewicht: " + pokemon.weight + "<br>"
@@ -244,42 +250,12 @@ let modal = function(){
         }
         let pokeInfo = document.createElement("p");
         pokeInfo.innerText = pokemon.flavorText;
-        modals.appendChild(picture);
-        modals.appendChild(textinfo);
-        modals.appendChild(pokeInfo);
-        
-        /* Makes a Close Button on the Modal*/ 
-        let closeButton = document.createElement("button");
-        closeButton.id="modal-close";
-        (userPreferences.getLanguage == "de")? closeButton.innerText = "Schließen" : closeButton.innerText = "Close"; 
-        closeButton.addEventListener('click', hideModal);
-        modals.appendChild(closeButton);
-        
-        // closes the modal, if you click on the border
-        modalContainer.addEventListener("click", (e)=> {
-            let target = e.target;
-            if (target === modalContainer) {
-                hideModal();
-            }
-        });
+        firstRow.appendChild(picture);
+        firstRow.appendChild(textinfo);
+        secondRow.appendChild(pokeInfo);
     }
-
-    function hideModal(){
-        let modalContainer = document.querySelector("#modal-container");
-        modalContainer.classList.remove("is-visible");
-    }
-
-    /* Allows closing of the Modal with the escape key*/
-    window.addEventListener("keydown", (e) =>{
-        let modalContainer = document.querySelector("#modal-container");
-        if (e.key === "Escape" && modalContainer.classList.contains("is-visible")) {
-            hideModal();
-        }
-    });
 
     return {
-        showModal: showModal,
-
-        hideModal: hideModal
+        showModal: showModal
     }
 }()
