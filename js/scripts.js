@@ -193,7 +193,7 @@ let search = function(){
         resultList.forEach(pokemonRepository.addPokemonToDOMList);
         if(resultList.length == 0){
             if(userPreferences.getLanguage == "de") {
-                setHelpText(searchField, "Überprüfe, ob keine Rechtschreibfehler vorhanden sind!")
+                setHelpText(searchField, "Überprüfe, ob Rechtschreibfehler vorhanden sind!")
             } else {
                 setHelpText(searchField, "Please check for spelling mistakes!");
             }
@@ -240,11 +240,11 @@ let modal = function(){
         textinfo = document.createElement("p");
         textinfo.classList.add("col-6");
         if (userPreferences.getLanguage == "de"){
-            textinfo.innerHTML= "Höhe: " + pokemon.height + "<br>"
+            document.querySelector(".poke-details").innerHTML= "Höhe: " + pokemon.height + "<br>"
                 + "Gewicht: " + pokemon.weight + "<br>"
                 + pokemon.genus;
         } else {
-            textinfo.innerHTML= "Height: " + pokemon.height + "<br>"
+            document.querySelector(".poke-details").innerHTML= "Height: " + pokemon.height + "<br>"
                 + "Weight: " + pokemon.weight + "<br>"
                 + pokemon.genus;
         }
